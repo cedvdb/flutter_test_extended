@@ -79,6 +79,17 @@ extension ExtendedTestWidget on WidgetTester {
     await smallPump();
   }
 
+  /// convenience method to enter text on ValueKey
+  Future<void> enterTextOnType<T>({
+    required String text,
+    required String key,
+  }) async {
+    final found = find.byType(T);
+    await ensureVisible(found);
+    await enterText(found, text);
+    await smallPump();
+  }
+
   /// convenience method that ensures a ValueKey is visible
   Future<void> ensureKeyVisible(String key) async {
     final found = find.byKey(ValueKey(key));

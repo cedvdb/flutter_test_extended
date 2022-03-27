@@ -8,7 +8,7 @@ void main() {
   group('', () {
 
     setUpWidgets((tester) async {
-      await tester.pumpWidget(const MyApp());
+      await tester.test(const MyApp());
     });
 
     testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -21,6 +21,9 @@ void main() {
       await tester.pump();
 
       expect(find.text('1'), findsOneWidget);
+
+      // will block test if uncommented, handy for debug
+      // await tester.printScreenshot();
     });
   });
 }
@@ -28,5 +31,10 @@ void main() {
 
 # Tester operations
 
-
+- printScreenshot()
+- tapType<T>()
+- tapKey('value-key-value');
+- enterTextOnKey('value-key-value')
+- scrollListViewUntilWidgetVisible
+- ...
 
