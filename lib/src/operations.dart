@@ -27,6 +27,7 @@ void setUpWidgets(TestCallback callback) {
 void testWidgets(
   String description,
   TestCallback callback, {
+  bool runSetUpWidgets = true,
   bool? skip,
   f.Timeout? timeout,
   bool semanticsEnabled = true,
@@ -38,7 +39,9 @@ void testWidgets(
   f.testWidgets(
     description,
     (tester) async {
-      await setupWidgets?.call(tester);
+      if (runSetUpWidgets) {
+        await setupWidgets?.call(tester);
+      }
       await callback(tester);
     },
     skip: skip,
