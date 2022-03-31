@@ -7,6 +7,8 @@ export 'package:flutter_test/flutter_test.dart' hide group, testWidgets;
 typedef TestCallback = Future<void> Function(WidgetTester tester);
 
 final _setupCallbacks = <Function, Function>{};
+final _tearDownCallbacks = <Function, Function>{};
+
 Function? _currentBody;
 
 void group(String description, VoidCallback body) {
@@ -24,6 +26,13 @@ void setUpWidgets(TestCallback callback) {
   _setupCallbacks[_currentBody!] = callback;
 }
 
+void tearDownWidgets(TestCallback callback) {
+  if (_currentBody == null) {
+    throw 'not in a group';
+  }
+  _tearDownCallbacks[_currentBody!] = callback;
+}
+
 void testWidgets(
   String description,
   TestCallback callback, {
@@ -35,6 +44,7 @@ void testWidgets(
   dynamic tags,
 }) {
   final setupWidgets = _setupCallbacks[_currentBody];
+  final tearDownWidgets = _tearDownCallbacks[_currentBody];
 
   f.testWidgets(
     description,
@@ -43,6 +53,9 @@ void testWidgets(
         await setupWidgets?.call(tester);
       }
       await callback(tester);
+      if (runSetUpWidgets) {
+        await tearDownWidgets?.call(tester);
+      }
     },
     skip: skip,
     timeout: timeout,
