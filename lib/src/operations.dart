@@ -59,7 +59,7 @@ void testWidgets(
     (tester) async {
       if (shouldFakeNetork) {
         await mockNetworkImages(
-          () async => _testWidgetsBody(
+          () => _testWidgetsBody(
             tester: tester,
             runSetUpWidgets: runSetUpWidgets,
             callback: callback,
