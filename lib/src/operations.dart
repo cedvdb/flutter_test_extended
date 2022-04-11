@@ -57,25 +57,13 @@ void testWidgets(
   f.testWidgets(
     description,
     (tester) async {
-      if (shouldFakeNetork) {
-        await mockNetworkImagesFor(
-          () => _testWidgetsBody(
-            tester: tester,
-            runSetUpWidgets: runSetUpWidgets,
-            callback: callback,
-            setupWidgets: setupWidgets,
-            tearDownWidgets: tearDownWidgets,
-          ),
-        );
-      } else {
-        await _testWidgetsBody(
-          tester: tester,
-          runSetUpWidgets: runSetUpWidgets,
-          callback: callback,
-          setupWidgets: setupWidgets,
-          tearDownWidgets: tearDownWidgets,
-        );
-      }
+      await _testWidgetsBody(
+        tester: tester,
+        runSetUpWidgets: runSetUpWidgets,
+        callback: callback,
+        setupWidgets: setupWidgets,
+        tearDownWidgets: tearDownWidgets,
+      );
     },
     skip: skip,
     timeout: timeout,
