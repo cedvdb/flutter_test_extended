@@ -24,8 +24,6 @@ extension ExtendedTestWidget on WidgetTester {
     await pump(const Duration(milliseconds: 100));
   }
 
-  Future<void> smallPump() => pump(const Duration(milliseconds: 600));
-
   /// returns a base64 screenshot of the screen, useful for making a
   /// diagnostic for unit test failures.
   Future<String> takeScreenshot() async {
@@ -76,7 +74,7 @@ extension ExtendedTestWidget on WidgetTester {
     final found = find.byKey(ValueKey(key));
     await ensureVisible(found);
     await enterText(found, text);
-    await smallPump();
+    await pumpAndSettle();
   }
 
   /// convenience method to enter text on ValueKey
@@ -87,7 +85,7 @@ extension ExtendedTestWidget on WidgetTester {
     final found = find.byType(T);
     await ensureVisible(found);
     await enterText(found, text);
-    await smallPump();
+    await pumpAndSettle();
   }
 
   /// convenience method that ensures a ValueKey is visible
