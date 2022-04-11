@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart' as f;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail_image_network/mocktail_image_network.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 export 'package:flutter_test/flutter_test.dart' hide group, testWidgets;
 
@@ -58,7 +58,7 @@ void testWidgets(
     description,
     (tester) async {
       if (shouldFakeNetork) {
-        await mockNetworkImages(
+        await mockNetworkImagesFor(
           () => _testWidgetsBody(
             tester: tester,
             runSetUpWidgets: runSetUpWidgets,
