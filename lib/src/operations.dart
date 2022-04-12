@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart' as f;
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +36,9 @@ void tearDownWidgets(TestCallback callback) {
   _tearDownCallbacks[_currentBody!] = callback;
 }
 
+bool get _isInMemory =>
+    !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+
 void testWidgets(
   String description,
   TestCallback callback, {
@@ -43,21 +48,34 @@ void testWidgets(
   bool semanticsEnabled = true,
   TestVariant<Object?> variant = const DefaultTestVariant(),
   dynamic tags,
+  HttpMockStrategy fakeNetworkSuccess = HttpMockStrategy.inMemoryTestOnly,
 }) {
   final setupWidgets = _setupCallbacks[_currentBody];
   final tearDownWidgets = _tearDownCallbacks[_currentBody];
+  final shouldFakeNetork = fakeNetworkSuccess == HttpMockStrategy.always ||
+      (fakeNetworkSuccess == HttpMockStrategy.inMemoryTestOnly && _isInMemory);
   f.testWidgets(
     description,
     (tester) async {
-      await mockNetworkImagesFor(
-        () => _testWidgetsBody(
+      if (shouldFakeNetork) {
+        await mockNetworkImagesFor(
+          () => _testWidgetsBody(
+            tester: tester,
+            runSetUpWidgets: runSetUpWidgets,
+            callback: callback,
+            setupWidgets: setupWidgets,
+            tearDownWidgets: tearDownWidgets,
+          ),
+        );
+      } else {
+        await _testWidgetsBody(
           tester: tester,
           runSetUpWidgets: runSetUpWidgets,
           callback: callback,
           setupWidgets: setupWidgets,
           tearDownWidgets: tearDownWidgets,
-        ),
-      );
+        );
+      }
     },
     skip: skip,
     timeout: timeout,
@@ -82,3 +100,5 @@ Future<void> _testWidgetsBody({
     await tearDownWidgets?.call(tester);
   }
 }
+
+enum HttpMockStrategy { never, always, inMemoryTestOnly }
