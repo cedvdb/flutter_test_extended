@@ -49,14 +49,12 @@ void testWidgets(
   f.testWidgets(
     description,
     (tester) async {
-      await mockNetworkImagesFor(
-        () => _testWidgetsBody(
-          tester: tester,
-          runSetUpWidgets: runSetUpWidgets,
-          callback: callback,
-          setupWidgets: setupWidgets,
-          tearDownWidgets: tearDownWidgets,
-        ),
+      await _testWidgetsBody(
+        tester: tester,
+        runSetUpWidgets: runSetUpWidgets,
+        callback: callback,
+        setupWidgets: setupWidgets,
+        tearDownWidgets: tearDownWidgets,
       );
     },
     skip: skip,
