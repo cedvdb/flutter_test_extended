@@ -24,6 +24,10 @@ extension ExtendedTestWidget on WidgetTester {
     await pump(const Duration(milliseconds: 100));
   }
 
+  Future<void> flushAsyncTask() async {
+    await runAsync(() async {});
+  }
+
   /// returns a base64 screenshot of the screen, useful for making a
   /// diagnostic for unit test failures.
   Future<String> takeScreenshot() async {
