@@ -1,7 +1,6 @@
 name: flutter_test_extended
 description: Adds behavior to flutter_test
 version: 0.0.1
-# homepage: https://www.example.com
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -10,6 +9,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   network_image_mock: ^2.1.0
 

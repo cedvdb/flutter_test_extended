@@ -6,6 +6,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 export 'package:flutter_test/flutter_test.dart' hide group, testWidgets;
+import 'package:integration_test/integration_test.dart' as integration;
+
+bool get _isTestingRunningInMemory =>
+    !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+
+/// allows to run the same test file for integration and unit tests.
+/// It ensures that IntegrationTestWidgetsFlutterBinding is initialized
+/// only when running a non unit test (so when running flutter drive).
+/// The use case is to run the same integration test in memory as the real
+/// integration test by swapping the datasources to in memory data sources
+/// (as opposed to network / device calls), for the test to run faster.
+void ensureInitialized() {
+  if (!_isTestingRunningInMemory) {
+    integration.IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  }
+}
 
 typedef TestCallback = Future<void> Function(WidgetTester tester);
 
@@ -36,9 +52,6 @@ void tearDownWidgets(TestCallback callback) {
   _tearDownCallbacks[_currentBody!] = callback;
 }
 
-bool get _isInMemory =>
-    !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
-
 void testWidgets(
   String description,
   TestCallback callback, {
@@ -53,7 +66,8 @@ void testWidgets(
   final setupWidgets = _setupCallbacks[_currentBody];
   final tearDownWidgets = _tearDownCallbacks[_currentBody];
   final shouldFakeNetork = fakeNetworkSuccess == HttpMockStrategy.always ||
-      (fakeNetworkSuccess == HttpMockStrategy.inMemoryTestOnly && _isInMemory);
+      (fakeNetworkSuccess == HttpMockStrategy.inMemoryTestOnly &&
+          _isTestingRunningInMemory);
   f.testWidgets(
     description,
     (tester) async {
