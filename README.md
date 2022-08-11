@@ -52,3 +52,7 @@ ensureInitialized();
 - scrollListViewUntilWidgetVisible
 - ...
 
+
+# Feature requests
+
+Note that no issue is allowed but pull requests will be reviewed / accepted.
